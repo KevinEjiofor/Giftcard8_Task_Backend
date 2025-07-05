@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: todo
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/todo_db
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ejioforkelvin@gmail.com
+    password: pbmg uiqf ogky gwus
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+server:
+  port: 8080
+
+app:
+  frontend:
+    url: http://localhost:3000
+  security:
+    max-login-attempts: 5
+    lockout-duration: 30
+    jwt:
+      secret: YourVeryLongSecretKeyHereThatIsAtLeast64CharactersLongForHS512AlgorithmToWorkProperlyAndSecurely123456789012345678901234567890
+      expiration: 86400000  # 1 day in milliseconds
+      refresh-expiration: 604800000  # 7 days in milliseconds
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
+    org.springframework.security: DEBUG
+    com.todo: DEBUG

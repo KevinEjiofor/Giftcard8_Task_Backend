@@ -1,0 +1,60 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+	id 'org.jetbrains.kotlin.jvm' version '1.9.25'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
+	id 'org.springframework.boot' version '3.5.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'todoBackend'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+kotlin {
+	jvmToolchain(21)
+	compilerOptions {
+		jvmTarget = JvmTarget.JVM_21
+		freeCompilerArgs.addAll(['-Xjsr305=strict'])
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
+	implementation('org.springframework.boot:spring-boot-starter-security')
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+	implementation('org.springframework.boot:spring-boot-devtools')
+
+	// JWT
+	implementation('io.jsonwebtoken:jjwt-api:0.11.5')
+	implementation('io.jsonwebtoken:jjwt-impl:0.11.5')
+	implementation('io.jsonwebtoken:jjwt-jackson:0.11.5')
+
+	// BCrypt for password hashing
+	implementation('org.springframework.security:spring-security-crypto')
+
+	// Kotlin reflection
+	implementation('org.jetbrains.kotlin:kotlin-reflect')
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// Testing
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.security:spring-security-test')
+	testImplementation('de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.12.2')
+
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

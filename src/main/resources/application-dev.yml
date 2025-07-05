@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/todoapp_dev
+
+logging:
+  level:
+    root: INFO
+    com.todo: DEBUG
