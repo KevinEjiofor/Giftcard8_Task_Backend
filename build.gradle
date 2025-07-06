@@ -47,12 +47,19 @@ dependencies {
 	implementation('org.jetbrains.kotlin:kotlin-reflect')
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+	// Email
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
 	// Testing
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('org.springframework.security:spring-security-test')
 	testImplementation('de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.12.2')
 
-	implementation("org.springframework.boot:spring-boot-starter-mail")
+	// Additional testing dependencies for unit tests
+	testImplementation('org.mockito.kotlin:mockito-kotlin:5.1.0')
+	testImplementation('org.jetbrains.kotlin:kotlin-test-junit5')
+	testImplementation('org.mockito:mockito-inline:5.2.0') // For mocking final classes
+	testImplementation('io.mockk:mockk:1.13.8') // Alternative Kotlin-friendly mocking library
 }
 
 tasks.named('test') {
