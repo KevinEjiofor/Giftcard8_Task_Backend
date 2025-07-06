@@ -15,8 +15,35 @@ class TaskController(
 ) {
 
     @GetMapping
-    fun getAllTasks(authentication: Authentication): ResponseEntity<TasksResponse> {
-        val tasksResponse = taskService.getAllTasks(authentication.name)
+    fun getAllTasks(
+        @RequestParam(required = false) search: String?,
+        @RequestParam(required = false) completed: Boolean?,
+        authentication: Authentication
+    ): ResponseEntity<TasksResponse> {
+        val tasksResponse = when {
+            !search.isNullOrBlank() -> taskService.searchTasks(authentication.name, search, completed)
+            completed != null -> taskService.getTasksByStatus(authentication.name, completed)
+            else -> taskService.getAllTasks(authentication.name)
+        }
+        return ResponseEntity.ok(tasksResponse)
+    }
+
+    @GetMapping("/search")
+    fun searchTasks(
+        @RequestParam query: String,
+        @RequestParam(required = false) completed: Boolean?,
+        authentication: Authentication
+    ): ResponseEntity<TasksResponse> {
+        val tasksResponse = taskService.searchTasks(authentication.name, query, completed)
+        return ResponseEntity.ok(tasksResponse)
+    }
+
+    @GetMapping("/filter")
+    fun getTasksByStatus(
+        @RequestParam completed: Boolean,
+        authentication: Authentication
+    ): ResponseEntity<TasksResponse> {
+        val tasksResponse = taskService.getTasksByStatus(authentication.name, completed)
         return ResponseEntity.ok(tasksResponse)
     }
 

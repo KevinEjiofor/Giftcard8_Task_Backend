@@ -3,14 +3,15 @@ package com.todo.service
 import com.todo.data.models.User
 import com.todo.data.repository.UserRepository
 import com.todo.dto.auth.*
+import com.todo.dto.profile.ProfileResponse
 import com.todo.exception.*
 import com.todo.security.JwtUtil
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.context.SecurityContextHolder
+
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.*
+
 import kotlin.random.Random
 
 @Service
@@ -233,7 +234,21 @@ class AuthService(
             expiresAt = System.currentTimeMillis() + jwtUtil.getAccessTokenExpiration()
         )
     }
+    fun getUserProfile(email: String): ProfileResponse {
+        val user = userRepository.findByEmail(email)
+            ?: throw UserNotFoundException("User not found")
 
+        return ProfileResponse(
+            id = user.id,
+            email = user.email,
+            username = user.username,
+            firstName = user.firstName,
+            lastName = user.lastName,
+            emailVerified = user.emailVerified,
+            createdAt = user.createdAt.toString(),
+            updatedAt = user.updatedAt.toString()
+        )
+    }
     fun logout(request: LogoutRequest): MessageResponse {
         val user = userRepository.findByRefreshToken(request.refreshToken)
         if (user != null) {

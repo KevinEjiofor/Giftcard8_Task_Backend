@@ -1,9 +1,12 @@
 package com.todo.controller
 
 import com.todo.dto.auth.*
+import com.todo.dto.profile.ProfileResponse
 import com.todo.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -64,6 +67,10 @@ class AuthController(
         val response = authService.logout(request)
         return ResponseEntity.ok(response)
     }
-
+    @GetMapping("/profile")
+    fun getProfile(@AuthenticationPrincipal userDetails: UserDetails): ResponseEntity<ProfileResponse> {
+        val response = authService.getUserProfile(userDetails.username)
+        return ResponseEntity.ok(response)
+    }
 
 }

@@ -14,24 +14,24 @@ data class User(
     val firstName: String,
     val lastName: String,
 
-    // Email verification fields
+
     val emailVerified: Boolean = false,
     val emailVerificationToken: String? = null,
     val emailVerificationExpiry: LocalDateTime? = null,
 
-    // Password reset fields
+
     val passwordResetToken: String? = null,
     val passwordResetExpiry: LocalDateTime? = null,
 
-    // Refresh token fields
+
     val refreshToken: String? = null,
     val refreshTokenExpiry: LocalDateTime? = null,
 
-    // Account security fields
+
     val loginAttempts: Int = 0,
     val lockoutUntil: LocalDateTime? = null,
 
-    // Timestamp fields
+
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now()
 )

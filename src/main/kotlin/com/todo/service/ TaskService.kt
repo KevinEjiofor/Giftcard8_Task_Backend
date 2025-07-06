@@ -33,6 +33,51 @@ class TaskService(
         )
     }
 
+    fun searchTasks(userEmail: String, searchTerm: String, completed: Boolean? = null): TasksResponse {
+        val user = userRepository.findByEmail(userEmail)
+            ?: throw UserNotFoundException("User not found")
+
+        val tasks = if (completed != null) {
+            taskRepository.findByUserIdAndCompletedAndTitleOrDescriptionContainingIgnoreCase(
+                user.id!!, completed, searchTerm
+            )
+        } else {
+            taskRepository.findByUserIdAndTitleOrDescriptionContainingIgnoreCase(
+                user.id!!, searchTerm
+            )
+        }.map { it.toResponse() }
+
+        return TasksResponse(
+            message = if (tasks.isEmpty())
+                "🔍 No tasks found matching '$searchTerm'. Try a different search term!"
+            else
+                "🔍 Found ${tasks.size} task${if (tasks.size > 1) "s" else ""} matching '$searchTerm'!",
+            success = true,
+            tasks = tasks,
+            totalTasks = tasks.size
+        )
+    }
+
+    fun getTasksByStatus(userEmail: String, completed: Boolean): TasksResponse {
+        val user = userRepository.findByEmail(userEmail)
+            ?: throw UserNotFoundException("User not found")
+
+        val tasks = taskRepository.findByUserIdAndCompleted(user.id!!, completed)
+            .map { it.toResponse() }
+
+        val statusText = if (completed) "completed" else "pending"
+
+        return TasksResponse(
+            message = if (tasks.isEmpty())
+                "📝 No $statusText tasks found!"
+            else
+                "✅ Found ${tasks.size} $statusText task${if (tasks.size > 1) "s" else ""}!",
+            success = true,
+            tasks = tasks,
+            totalTasks = tasks.size
+        )
+    }
+
     fun createTask(request: CreateTaskRequest, userEmail: String): TaskCreatedResponse {
         val user = userRepository.findByEmail(userEmail)
             ?: throw UserNotFoundException("User not found")
